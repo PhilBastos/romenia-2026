@@ -177,6 +177,7 @@
     check: svg('<path d="m5 13 4 4 10-10"/>'),
     chevron: svg('<path d="m9 6 6 6-6 6"/>'),
     seta: svg('<path d="M12 5v14"/><path d="m6 13 6 6 6-6"/>'),
+    setaCanto: svg('<path d="M7 17 17 7"/><path d="M8 7h9v9"/>'),
     carro: svg('<path d="M5 16v3M19 16v3"/><path d="M4 16h16l-1.5-6.5a2 2 0 0 0-2-1.5H7.5a2 2 0 0 0-2 1.5L4 16Z"/><path d="M6.5 12h11"/><circle cx="8" cy="16" r="1.2"/><circle cx="16" cy="16" r="1.2"/>'),
     aviao: svg('<path d="M10 4.5 4 12l1 3 4-1 2 4 2-1-1-4 5-1 2-3-3 1-2-4-1 1 1 3-4 1-1-4Z"/>'),
     cama: svg('<path d="M4 18V7"/><path d="M4 12h16v6"/><path d="M4 12V9a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v3"/><path d="M20 18v-4"/>'),
@@ -386,27 +387,30 @@
       "</div>";
   }
 
-  function rotaLinearHtml() {
-    var itens = DATA.mapa.pontos.map(function (p, i) {
-      var seta = i < DATA.mapa.pontos.length - 1
-        ? '<span class="rota-linear__seta" aria-hidden="true">' + ICON.seta + "</span>" : "";
-      return '<li><a class="rota-linear__parada" href="#/dia/' + p.dia + '">' +
-        '<span class="rota-linear__n" aria-hidden="true">' + (i + 1) + "</span>" +
-        '<span class="rota-linear__nome">' + esc(p.nome) + "</span>" +
-        '<span class="rota-linear__dia">Dia ' + p.dia + "</span></a>" + seta + "</li>";
-    }).join("");
-    return '<ol class="rota-linear">' + itens + "</ol>";
+  function mapaQuadro(variante) {
+    return '<div class="mapa-quadro mapa-quadro--' + variante + '">' +
+      window.RomaniaMap.render(DATA.mapa.pontos, { slice: variante === "tela" }) +
+      "</div>";
+  }
+
+  function diasCardsHtml() {
+    var hAtual = hojeISO();
+    return '<ol class="dias-cards">' + DATA.dias.map(function (dia, i) {
+      var ehHoje = dia.data === hAtual;
+      return "<li>" +
+        '<a class="dia-card' + (ehHoje ? " dia-card--hoje" : "") + '" href="#/dia/' + (i + 1) + '">' +
+        '<span class="dia-card__meta">Dia ' + (i + 1) + " · " + esc(dia.dataLabel) +
+        (ehHoje ? ' · <span class="dia-card__hoje">hoje</span>' : "") + "</span>" +
+        '<span class="dia-card__titulo">' + esc(dia.titulo) + "</span>" +
+        '<span class="dia-card__seta" aria-hidden="true">' + ICON.setaCanto + "</span>" +
+        "</a></li>";
+    }).join("") + "</ol>";
   }
 
   /* ======================================================= TELA: Hoje */
 
   function viewHoje() {
     var f = fase();
-    var pontos = DATA.meta.rotaResumo;
-    var diagrama = '<ul class="diagrama">' + pontos.map(function (nome, i) {
-      return "<li>" + esc(nome) + "</li>" +
-        (i < pontos.length - 1 ? '<li class="diagrama__seta" aria-hidden="true">↓</li>' : "");
-    }).join("") + "</ul>";
 
     if (f === "antes") {
       var faltam = diasEntre(hojeISO(), DATA.meta.dataInicio);
@@ -424,8 +428,9 @@
             : "Sua viagem começa em <strong>" + faltam + " dias</strong>") + "</p>" +
           botao({ href: "#/roteiro", label: "Ver o roteiro", variante: "primario", grande: true }) +
           "</section>" +
-          '<section class="bloco"><p class="rotulo-secao">A rota</p>' + diagrama +
-          botao({ href: "#/mapa", label: "Ver no mapa", icone: ICON.mapa }) + "</section>"
+          '<section class="bloco"><p class="rotulo-secao">A rota</p>' +
+          mapaQuadro("home") +
+          botao({ href: "#/mapa", label: "Abrir o mapa", icone: ICON.mapa }) + "</section>"
       };
     }
 
@@ -437,7 +442,8 @@
           '<p class="sobretitulo">' + esc(DATA.meta.periodoLabel) + "</p>" +
           '<h1 class="titulo-grande">Nossa viagem<br>pela Romênia</h1>' +
           "</header>" +
-          '<section class="bloco"><p class="rotulo-secao">O caminho que fizemos</p>' + diagrama + "</section>" +
+          '<section class="bloco"><p class="rotulo-secao">O caminho que fizemos</p>' +
+          mapaQuadro("home") + "</section>" +
           '<section class="acoes acoes--empilhada">' +
           botao({ href: "#/roteiro", label: "Rever o roteiro", variante: "primario", grande: true, icone: ICON.roteiro }) +
           botao({ href: "#/mapa", label: "Ver o mapa", icone: ICON.mapa }) +
@@ -641,28 +647,16 @@
 
   /* ====================================================== TELA: Mapa */
 
-  var mapaSelecionado = null;
-
   function viewMapa() {
-    var painel = "";
-    if (mapaSelecionado != null) {
-      var pt = DATA.mapa.pontos[mapaSelecionado];
-      var dia = DATA.dias[pt.dia - 1];
-      painel = '<div class="mapa-selecao" role="status">' +
-        "<div><p class=\"mapa-selecao__nome\">" + esc(pt.nome) + "</p>" +
-        '<p class="mapa-selecao__dia">' + esc(dia.dataLabel) + " · " + esc(dia.titulo) + "</p></div>" +
-        botao({ href: "#/dia/" + pt.dia, label: "Ver o dia", variante: "primario" }) +
-        "</div>";
-    }
     return {
       titulo: "Nossa rota",
       html:
         '<header class="cabecalho"><h1 class="titulo-grande">Nossa rota</h1>' +
-        '<p class="periodo">Toque num ponto para abrir o dia correspondente.</p></header>' +
-        '<div class="mapa-wrap">' + window.RomaniaMap.render(DATA.mapa.pontos) + "</div>" +
-        painel +
-        '<section class="bloco"><p class="rotulo-secao">Sequência da viagem</p>' +
-        rotaLinearHtml() + "</section>"
+        '<p class="periodo">' + DATA.dias.length + " dias · " + esc(DATA.meta.periodoLabel) +
+        " · toque num ponto para abrir o dia</p></header>" +
+        mapaQuadro("tela") +
+        '<section class="bloco"><p class="rotulo-secao">Os dias</p>' +
+        diasCardsHtml() + "</section>"
     };
   }
 
@@ -758,7 +752,7 @@
       else a.removeAttribute("aria-current");
     });
 
-    if (r.view === "mapa") ligarMapa();
+    if (r.view === "mapa" || r.view === "hoje") ligarMapa();
 
     if (manterScroll) {
       window.scrollTo(0, y);
@@ -773,20 +767,10 @@
 
   function ligarMapa() {
     qsa(".mapa-ponto").forEach(function (g) {
-      function sel() {
-        mapaSelecionado = parseInt(g.getAttribute("data-ponto"), 10);
-        window._manterScroll = true;
-        render();
-        var painel = qs(".mapa-selecao");
-        if (painel) {
-          var b = qs(".botao", painel);
-          if (b) b.focus();
-          painel.scrollIntoView({ block: "center", behavior: "smooth" });
-        }
-      }
-      g.addEventListener("click", sel);
+      function ir() { location.hash = "#/dia/" + g.getAttribute("data-dia"); }
+      g.addEventListener("click", ir);
       g.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); sel(); }
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ir(); }
       });
     });
   }
@@ -807,10 +791,7 @@
 
   /* ------------------------------------------------------ navegação */
 
-  window.addEventListener("hashchange", function () {
-    mapaSelecionado = null;
-    render();
-  });
+  window.addEventListener("hashchange", render);
 
   /* injeta ícones na barra de navegação */
   function montarNav() {

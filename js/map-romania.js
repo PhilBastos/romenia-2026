@@ -1,26 +1,24 @@
 /*
- * Mapa estilizado da Romênia em SVG.
+ * Mapa atmosférico da road trip em SVG.
  *
- * O contorno do país é decorativo (uma silhueta simplificada, não um mapa
- * cartográfico). As posições das cidades vêm das coordenadas reais do
- * arquivo de dados e são projetadas sobre esse contorno.
+ * O enquadramento acompanha a ROTA (não o país inteiro): a projeção vem
+ * das coordenadas reais das paradas, com margem, para o trajeto ocupar
+ * bem o quadro. A silhueta da Romênia entra como pano de fundo discreto.
  *
- * Os pontos aparecem numerados na ordem da viagem. Os nomes ficam na
- * legenda logo abaixo do mapa (montada pelo app.js) e no painel que
- * aparece ao tocar num ponto. Alguns pontos muito próximos entre si
- * (a região dos Cárpatos) recebem um pequeno deslocamento visual para
- * não se sobreporem — coerente com um mapa estilizado.
+ * Nem toda parada recebe rótulo: duas ficam sem nome (Sinaia, junto de
+ * Bran; e o Aeroporto, junto de Bucareste) para os textos não se
+ * amontoarem. Todas continuam clicáveis. O nó dos Cárpatos é "aberto"
+ * com pequenos deslocamentos visuais — coerente com um mapa estilizado.
  *
- * renderRomania(pontos) devolve uma string SVG. Cada ponto vira um
- * elemento <g data-ponto="i"> que o app.js torna clicável.
+ * RomaniaMap.render(pontos, opts) → string SVG. Cada ponto é um
+ * <g class="mapa-ponto" data-ponto data-dia> que o app.js torna clicável.
+ * opts.slice = true recorta para molduras altas (tela do Mapa).
  */
 window.RomaniaMap = (function () {
   "use strict";
 
-  var VB_W = 900, VB_H = 640, PAD = 54;
-  var LNG_MIN = 20.2, LNG_MAX = 29.8, LAT_MIN = 43.6, LAT_MAX = 48.4;
+  var VB_W = 820, VB_H = 780, PAD = 104;
 
-  /* Silhueta simplificada da Romênia — pares [lng, lat], sentido horário. */
   var CONTORNO = [
     [22.90, 47.95], [23.90, 48.05], [24.90, 47.98], [25.60, 47.97],
     [26.25, 48.28], [26.65, 48.28], [27.25, 47.90], [28.05, 47.10],
@@ -32,23 +30,31 @@ window.RomaniaMap = (function () {
     [22.00, 47.18], [22.62, 47.62]
   ];
 
-  /* Deslocamento visual (em unidades do viewBox) para pontos aglomerados. */
+  /* Deslocamento visual (unidades do viewBox) para "abrir" o nó dos Cárpatos. */
   var NUDGE = {
-    0: [-4, 12],   // Bucareste (início)
-    1: [-8, 8],    // Sinaia · Peleș
-    2: [-36, -6],  // Bran
-    3: [30, 4],    // Brașov
-    6: [-36, 18],  // Sibiu
-    7: [-8, 44],   // Transfăgărășan · Bâlea
-    8: [20, -18]   // Aeroporto (fim)
+    0: [10, 14],    // Bucareste
+    1: [4, 26],     // Sinaia · Peleș (sem rótulo)
+    2: [-54, 0],    // Bran
+    3: [56, 12],    // Brașov
+    5: [0, -10],    // Turda
+    6: [-52, 6],    // Sibiu
+    7: [-2, 58],    // Transfăgărășan
+    8: [34, -16]    // Aeroporto (sem rótulo)
   };
 
-  function projX(lng) {
-    return PAD + (lng - LNG_MIN) / (LNG_MAX - LNG_MIN) * (VB_W - 2 * PAD);
-  }
-  function projY(lat) {
-    return PAD + (LAT_MAX - lat) / (LAT_MAX - LAT_MIN) * (VB_H - 2 * PAD);
-  }
+  /* Rótulo por ponto: [ancoragem, dx, dy] ou null (sem rótulo). */
+  var LABEL = [
+    ["middle", 0, 34],   // 0 Bucareste
+    null,                // 1 Sinaia · Peleș
+    ["end", -18, 3],     // 2 Bran
+    ["start", 18, 8],    // 3 Brașov
+    ["start", 18, 2],    // 4 Sighișoara
+    ["middle", 0, -22],  // 5 Turda
+    ["end", -18, 3],     // 6 Sibiu
+    ["middle", 0, 32],   // 7 Transfăgărășan
+    null                 // 8 Aeroporto
+  ];
+
   function r1(n) { return Math.round(n * 10) / 10; }
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
@@ -56,7 +62,37 @@ window.RomaniaMap = (function () {
     });
   }
 
-  function render(pontos) {
+  function suave(pts) {
+    var d = "M" + r1(pts[0].x) + " " + r1(pts[0].y);
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i - 1] || pts[i], p1 = pts[i];
+      var p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      d += " C" +
+        r1(p1.x + (p2.x - p0.x) / 6) + " " + r1(p1.y + (p2.y - p0.y) / 6) + " " +
+        r1(p2.x - (p3.x - p1.x) / 6) + " " + r1(p2.y - (p3.y - p1.y) / 6) + " " +
+        r1(p2.x) + " " + r1(p2.y);
+    }
+    return d;
+  }
+
+  function render(pontos, opts) {
+    opts = opts || {};
+    var par = opts.slice ? "xMidYMid slice" : "xMidYMid meet";
+
+    var lat = pontos.map(function (p) { return p.coords[0]; });
+    var lng = pontos.map(function (p) { return p.coords[1]; });
+    var laMin = Math.min.apply(null, lat), laMax = Math.max.apply(null, lat);
+    var loMin = Math.min.apply(null, lng), loMax = Math.max.apply(null, lng);
+    laMin -= (laMax - laMin) * 0.34 + 0.15; laMax += (laMax - laMin) * 0.12 + 0.15;
+    loMin -= (loMax - loMin) * 0.30 + 0.15; loMax += (loMax - loMin) * 0.30 + 0.15;
+
+    var cx = Math.cos((laMin + laMax) / 2 * Math.PI / 180);
+    var geoW = (loMax - loMin) * cx, geoH = (laMax - laMin);
+    var s = Math.min((VB_W - 2 * PAD) / geoW, (VB_H - 2 * PAD) / geoH);
+    var offX = (VB_W - geoW * s) / 2, offY = (VB_H - geoH * s) / 2;
+    function projX(lo) { return offX + (lo - loMin) * cx * s; }
+    function projY(la) { return offY + (laMax - la) * s; }
+
     var contorno = CONTORNO.map(function (p, i) {
       return (i ? "L" : "M") + r1(projX(p[0])) + " " + r1(projY(p[1]));
     }).join(" ") + " Z";
@@ -66,32 +102,42 @@ window.RomaniaMap = (function () {
       return { x: projX(pt.coords[1]) + n[0], y: projY(pt.coords[0]) + n[1] };
     });
 
-    var rota = xy.map(function (p, i) {
-      return (i ? "L" : "M") + r1(p.x) + " " + r1(p.y);
-    }).join(" ");
+    var rota = suave(xy);
 
     var marcadores = pontos.map(function (pt, i) {
-      var p = xy[i];
+      var p = xy[i], cfg = LABEL[i];
+      var extremo = i === 0 || !!pt.fim;
       return (
         '<g class="mapa-ponto" data-ponto="' + i + '" data-dia="' + pt.dia + '" ' +
         'role="button" tabindex="0" aria-label="Parada ' + (i + 1) + ": " +
-        esc(pt.nome) + ' — abrir dia ' + pt.dia + '">' +
-        '<circle class="mapa-ponto__alvo" cx="' + r1(p.x) + '" cy="' + r1(p.y) + '" r="26"/>' +
-        '<circle class="mapa-ponto__dot" cx="' + r1(p.x) + '" cy="' + r1(p.y) + '" r="15"/>' +
-        '<text class="mapa-ponto__n" x="' + r1(p.x) + '" y="' + r1(p.y) +
-          '" text-anchor="middle" dominant-baseline="central">' + (i + 1) + '</text>' +
-        '</g>'
+        esc(pt.nome) + ' — abrir o dia ' + pt.dia + '">' +
+        '<circle class="mapa-ponto__alvo" cx="' + r1(p.x) + '" cy="' + r1(p.y) + '" r="32"/>' +
+        '<circle class="mapa-ponto__halo" cx="' + r1(p.x) + '" cy="' + r1(p.y) + '" r="12"/>' +
+        '<circle class="mapa-ponto__dot" cx="' + r1(p.x) + '" cy="' + r1(p.y) + '" r="6"/>' +
+        (extremo ? '<circle class="mapa-ponto__anel" cx="' + r1(p.x) + '" cy="' + r1(p.y) + '" r="10.5"/>' : "") +
+        (cfg
+          ? '<text class="mapa-ponto__label" x="' + r1(p.x + cfg[1]) + '" y="' + r1(p.y + cfg[2]) +
+            '" text-anchor="' + cfg[0] + '">' + esc(pt.nome) + "</text>"
+          : "") +
+        "</g>"
       );
     }).join("");
 
     return (
       '<svg class="mapa-svg" viewBox="0 0 ' + VB_W + ' ' + VB_H + '" ' +
-      'xmlns="http://www.w3.org/2000/svg" role="img" ' +
-      'aria-label="Mapa estilizado da Romênia com os nove pontos da rota, numerados na ordem da viagem">' +
+      'xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="' + par + '" ' +
+      'role="img" aria-label="Mapa da road trip pela Romênia, nove paradas na ordem da viagem">' +
+      '<defs><linearGradient id="mapaCeu" x1="0" y1="0" x2="0.35" y2="1">' +
+      '<stop offset="0" stop-color="#31434a"/>' +
+      '<stop offset="0.6" stop-color="#3d4d58"/>' +
+      '<stop offset="1" stop-color="#46545c"/>' +
+      "</linearGradient></defs>" +
+      '<rect x="0" y="0" width="' + VB_W + '" height="' + VB_H + '" fill="url(#mapaCeu)"/>' +
       '<path class="mapa-pais" d="' + contorno + '"/>' +
+      '<path class="mapa-rota-brilho" d="' + rota + '"/>' +
       '<path class="mapa-rota" d="' + rota + '"/>' +
       marcadores +
-      '</svg>'
+      "</svg>"
     );
   }
 

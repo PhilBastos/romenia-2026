@@ -50,8 +50,8 @@ window.ITINERARY = {
       { nome: "Sighișoara",             coords: [46.2199, 24.7925], dia: 4 },
       { nome: "Turda",                  coords: [46.5875, 23.7869], dia: 5 },
       { nome: "Sibiu",                  coords: [45.7975, 24.1516], dia: 5 },
-      { nome: "Transfăgărășan · Bâlea", coords: [45.6040, 24.6170], dia: 6 },
-      { nome: "Aeroporto (Bucareste)",  coords: [44.5711, 26.0850], dia: 6, fim: true }
+      { nome: "Transfăgărășan",         coords: [45.6040, 24.6170], dia: 6 },
+      { nome: "Aeroporto",              coords: [44.5711, 26.0850], dia: 6, fim: true }
     ]
   },
 
