@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Romênia 2026">
-  <rect width="512" height="512" fill="#23453a"/>
+  <rect width="512" height="512" fill="#327781"/>
   <path d="M172 424 C172 352 348 352 348 278 C348 212 196 212 196 132"
-        fill="none" stroke="#efe6d0" stroke-width="34" stroke-linecap="round"/>
+        fill="none" stroke="#e8ddc6" stroke-width="34" stroke-linecap="round"/>
   <path d="M172 424 C172 352 348 352 348 278 C348 212 196 212 196 132"
-        fill="none" stroke="#23453a" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 26"/>
-  <circle cx="196" cy="132" r="26" fill="#a6432e"/>
+        fill="none" stroke="#327781" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 26"/>
+  <circle cx="196" cy="132" r="26" fill="#9a4a2b"/>
   <circle cx="196" cy="132" r="9" fill="#f6f1e7"/>
 </svg>
