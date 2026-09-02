@@ -65,7 +65,7 @@ window.ITINERARY = {
       destino: "Bucareste",
       titulo: "Bucareste",
       resumo:
-        "Vocês chegam de madrugada, por volta das 01:30. O dia é curto de " +
+        "Vocês chegam de madrugada, por volta da 01:30. O dia é curto de " +
         "propósito: descansar pela manhã e conhecer o centro de Bucareste " +
         "com calma à tarde.",
       selos: [{ tom: "aviso", texto: "Chegada 01:30" }],
