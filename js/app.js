@@ -259,41 +259,38 @@
       "</ul></div>";
   }
 
-  /* Bloco "PRÓXIMO DESTINO" ao pé de uma parada. */
-  function proximoDestino(dia, idx) {
+  /* Bloco "PRÓXIMO DESTINO" ao pé de uma parada.
+     O botão abre a PÁGINA DE DETALHES da próxima parada (não o mapa) —
+     de lá o usuário abre o Google Maps se quiser dirigir. */
+  function proximoDestino(dia, n, idx) {
     var parada = dia.paradas[idx];
     var prox = dia.paradas[idx + 1];
-    var alvo, meta = "", leg = parada.trechoAteProximo;
 
     if (prox) {
-      alvo = { nome: prox.nomePt, curto: prox.nomePt, coords: prox.coords, modo: prox.modo };
-      meta = fmtTrecho(leg);
+      var meta = fmtTrecho(parada.trechoAteProximo);
       if (prox.prioridade === "opcional")
         meta = (meta ? meta + " · " : "") + "parada opcional";
-    } else if (dia.hospedagem && !isPendente(dia.hospedagem.nome)) {
-      alvo = {
-        nome: "Sua hospedagem em " + dia.hospedagem.cidade,
-        curto: "o hotel",
-        coords: dia.hospedagem.coords, modo: "driving"
-      };
-    } else if (dia.hospedagem) {
-      return '<section class="proximo-destino"><p class="rotulo-secao">Depois desta parada</p>' +
-        '<p class="proximo-destino__nome">Sua hospedagem em ' + esc(dia.hospedagem.cidade) + "</p>" +
-        '<p class="proximo-destino__meta">Endereço ainda não adicionado</p></section>';
-    } else {
-      return "";
+      return '<section class="proximo-destino">' +
+        '<p class="rotulo-secao">Próximo destino</p>' +
+        '<p class="proximo-destino__nome">' + esc(prox.nomePt) + "</p>" +
+        (prox.local && prox.local !== prox.nomePt
+          ? '<p class="proximo-destino__sub">' + esc(prox.local) + "</p>" : "") +
+        (meta ? '<p class="proximo-destino__meta">' + esc(meta) + "</p>" : "") +
+        botao({ href: "#/dia/" + n + "/parada/" + (idx + 1), label: "Ver próximo destino",
+          variante: "primario", grande: true, icone: ICON.seta }) +
+        "</section>";
     }
 
-    var link = window.Maps.rota(alvo.coords, alvo.modo);
-    return '<section class="proximo-destino">' +
-      '<p class="rotulo-secao">Próximo destino</p>' +
-      '<p class="proximo-destino__nome">' + esc(alvo.nome) + "</p>" +
-      (meta ? '<p class="proximo-destino__meta">' + esc(meta) + "</p>" : "") +
-      (link
-        ? botao({ href: link, label: "Ir para " + alvo.curto, variante: "primario", grande: true,
-                  icone: alvo.modo === "walking" ? ICON.andar : ICON.dirigir })
-        : '<p class="proximo-destino__meta">Localização ainda não adicionada</p>') +
-      "</section>";
+    if (dia.hospedagem) {
+      return '<section class="proximo-destino">' +
+        '<p class="rotulo-secao">No fim do dia</p>' +
+        '<p class="proximo-destino__nome">Sua hospedagem em ' + esc(dia.hospedagem.cidade) + "</p>" +
+        botao({ href: "#/dia/" + n, label: "Ver a hospedagem", variante: "primario",
+          grande: true, icone: ICON.cama }) +
+        "</section>";
+    }
+
+    return "";
   }
 
   function botaoMarcar(dia, idx, grande) {
@@ -638,7 +635,7 @@
           ? '<p class="parada__tempo">' + ICON.relogio + "<span>Tempo sugerido: " + esc(p.tempoSugerido) + "</span></p>" : "") +
         (p.observacao ? avisoHtml(p.observacao, "info") : "") +
         botaoMarcar(dia, i, true) +
-        proximoDestino(dia, i) +
+        proximoDestino(dia, n, i) +
         (i === dia.paradas.length - 1 && !dia.hospedagem && p.aeroporto
           ? '<p class="fim-viagem">Fim da road trip. Boa viagem de volta! ✈️</p>' : "") +
         "</article>"

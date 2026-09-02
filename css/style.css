@@ -665,7 +665,9 @@ body.tem-instalar .conteudo {
   letter-spacing: -.02em;
   margin-bottom: 4px;
 }
+.proximo-destino__sub { font-size: 14px; color: var(--tinta-suave); margin-bottom: 2px; }
 .proximo-destino__meta { font-size: 14px; color: var(--tinta-suave); margin-bottom: 14px; }
+.proximo-destino__meta:first-of-type { margin-top: 4px; }
 .proximo-destino .botao { margin-top: 0; }
 
 .fim-viagem {
