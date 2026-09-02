@@ -867,9 +867,73 @@
     };
   }
 
+  /* ============================================ convite de instalação */
+
+  function configurarInstalacao() {
+    var KEY = "romenia2026:instalar-oculto";
+    var banner = document.getElementById("instalar");
+    var texto = document.getElementById("instalar-texto");
+    var btnAcao = document.getElementById("btn-instalar");
+    var btnFechar = document.getElementById("btn-instalar-fechar");
+    if (!banner) return;
+
+    var jaInstalado =
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      window.navigator.standalone === true;
+    if (jaInstalado) return;
+
+    try { if (localStorage.getItem(KEY) === "1") return; } catch (e) {}
+
+    var dispensado = false;
+    function mostrar() {
+      if (dispensado) return;
+      banner.hidden = false;
+      document.body.classList.add("tem-instalar");
+    }
+    function fechar(lembrar) {
+      dispensado = true;
+      banner.hidden = true;
+      document.body.classList.remove("tem-instalar");
+      if (lembrar !== false) { try { localStorage.setItem(KEY, "1"); } catch (e) {} }
+    }
+    btnFechar.addEventListener("click", function () { fechar(true); });
+
+    /* Android / Chrome / Edge — prompt nativo */
+    var promptAdiado = null;
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      promptAdiado = e;
+      texto.textContent = "Adicione o guia à tela inicial do celular.";
+      btnAcao.hidden = false;
+      mostrar();
+    });
+    btnAcao.addEventListener("click", function () {
+      if (!promptAdiado) return;
+      promptAdiado.prompt();
+      var p = promptAdiado.userChoice;
+      promptAdiado = null;
+      (p && p.then ? p : Promise.resolve()).then(function () { fechar(true); });
+    });
+    window.addEventListener("appinstalled", function () { fechar(true); });
+
+    /* iPhone / iPad no Safari — sem API, mostra a instrução */
+    var ua = navigator.userAgent;
+    var ehIOS = /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var ehSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|Chrome|Android/.test(ua);
+    if (ehIOS && ehSafari) {
+      texto.innerHTML =
+        'Para instalar: toque em <strong>Compartilhar</strong> e depois em ' +
+        '<strong>“Adicionar à Tela de Início”</strong>.';
+      btnAcao.hidden = true;
+      setTimeout(mostrar, 1500);
+    }
+  }
+
   /* =========================================================== init */
 
   montarNav();
   render();
   registrarSW();
+  configurarInstalacao();
 })();
