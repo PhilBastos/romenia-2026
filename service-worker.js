@@ -14,7 +14,7 @@
  * o aviso "Roteiro atualizado" para o usuário.
  */
 
-const CACHE_VERSION = "romenia-2026-v5";
+const CACHE_VERSION = "romenia-2026-v6";
 
 const APP_SHELL = [
   ".",
@@ -23,13 +23,22 @@ const APP_SHELL = [
   "js/app.js",
   "js/maps.js",
   "js/map-romania.js",
+  "js/mapa-interativo.js",
   "data/itinerary.js",
+  "data/routes.js",
   "manifest.webmanifest",
   "assets/icons/icon.svg",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
   "assets/icons/icon-maskable-512.png",
-  "assets/icons/apple-touch-icon.png"
+  "assets/icons/apple-touch-icon.png",
+  "assets/images/bucareste.webp",
+  "assets/images/transilvania.webp",
+  "assets/images/sighisoara.webp",
+  "assets/images/sibiu.webp",
+  "assets/images/transfagarasan.webp",
+  "assets/images/peles.webp",
+  "assets/images/brasov.webp"
 ];
 
 self.addEventListener("install", (event) => {

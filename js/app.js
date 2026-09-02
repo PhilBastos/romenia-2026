@@ -178,6 +178,7 @@
     chevron: svg('<path d="m9 6 6 6-6 6"/>'),
     seta: svg('<path d="M12 5v14"/><path d="m6 13 6 6 6-6"/>'),
     setaCanto: svg('<path d="M7 17 17 7"/><path d="M8 7h9v9"/>'),
+    recolher: svg('<path d="M9 5v4H5"/><path d="M15 19v-4h4"/><path d="M19 9h-4V5"/><path d="M5 15h4v4"/>'),
     carro: svg('<path d="M5 16v3M19 16v3"/><path d="M4 16h16l-1.5-6.5a2 2 0 0 0-2-1.5H7.5a2 2 0 0 0-2 1.5L4 16Z"/><path d="M6.5 12h11"/><circle cx="8" cy="16" r="1.2"/><circle cx="16" cy="16" r="1.2"/>'),
     aviao: svg('<path d="M10 4.5 4 12l1 3 4-1 2 4 2-1-1-4 5-1 2-3-3 1-2-4-1 1 1 3-4 1-1-4Z"/>'),
     cama: svg('<path d="M4 18V7"/><path d="M4 12h16v6"/><path d="M4 12V9a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v3"/><path d="M20 18v-4"/>'),
@@ -384,9 +385,38 @@
       "</div>";
   }
 
+  function fotoUrl(stem) { return stem ? "assets/images/" + stem + ".webp" : ""; }
+
+  function heroFoto(stem, alt) {
+    var url = fotoUrl(stem);
+    if (!url) return "";
+    return '<div class="hero-foto" role="img" aria-label="Foto: ' + esc(alt) + '" ' +
+      'style="background-image:url(' + url + ')"></div>';
+  }
+
+  /* Foto que acompanha o mapa: o destino do dia atual (ou o 1º / o último). */
+  function fotoDoMapa() {
+    var i = fase() === "depois" ? DATA.dias.length - 1
+      : fase() === "durante" ? indiceDiaAtual() : 0;
+    var d = DATA.dias[Math.max(0, i)];
+    return d && d.foto ? d.foto : (DATA.dias[0] && DATA.dias[0].foto) || "";
+  }
+
   function mapaQuadro(variante) {
+    var url = fotoUrl(fotoDoMapa());
     return '<div class="mapa-quadro mapa-quadro--' + variante + '">' +
-      window.RomaniaMap.render(DATA.mapa.pontos, { slice: variante === "tela" }) +
+      '<div class="mapa-foto"' + (url ? ' style="background-image:url(' + url + ')"' : "") + "></div>" +
+      '<div class="mapa-scrim"></div>' +
+      '<div class="mapa-flat"></div>' +
+      '<div class="mapa-viewport"><div class="mapa-pan">' +
+      window.RomaniaMap.render(DATA.mapa.pontos) +
+      "</div></div>" +
+      '<div class="mapa-zoom">' +
+      '<button type="button" class="mapa-zoom__b" data-zoom="in" aria-label="Aproximar o mapa">+</button>' +
+      '<button type="button" class="mapa-zoom__b" data-zoom="out" aria-label="Afastar o mapa">−</button>' +
+      '<button type="button" class="mapa-zoom__b mapa-zoom__b--reset" data-zoom="reset" ' +
+      'aria-label="Voltar o mapa ao início">' + ICON.recolher + "</button>" +
+      "</div>" +
       "</div>";
   }
 
@@ -585,6 +615,7 @@
       titulo: dia.titulo,
       html:
         '<p class="migalha"><a href="#/roteiro">' + ICON.chevron + " Roteiro</a></p>" +
+        heroFoto(dia.foto, dia.titulo) +
         '<header class="cabecalho">' +
         '<p class="sobretitulo">' + esc(dia.dataLabel) + " · " + esc(fmtDiaSemana(dia.data)) + "</p>" +
         '<h1 class="titulo-grande">' + esc(dia.titulo) + "</h1>" +
@@ -620,6 +651,7 @@
       titulo: p.nomePt,
       html:
         '<p class="migalha"><a href="#/dia/' + n + '">' + ICON.chevron + " " + esc(dia.titulo) + "</a></p>" +
+        heroFoto(p.foto || dia.foto, p.nomePt) +
         '<article class="parada-detalhe">' +
         '<p class="parada__num">Parada ' + (i + 1) + " de " + dia.paradas.length + " · " + esc(dia.dataLabel) + "</p>" +
         '<h1 class="titulo-grande">' + esc(p.nomePt) + "</h1>" +
@@ -750,6 +782,10 @@
     });
 
     if (r.view === "mapa" || r.view === "hoje") ligarMapa();
+    if (r.view === "mapa") {
+      var quadro = qs(".mapa-quadro");
+      if (quadro && window.MapaInterativo) window.MapaInterativo(quadro);
+    }
 
     if (manterScroll) {
       window.scrollTo(0, y);

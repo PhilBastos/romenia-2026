@@ -47,7 +47,7 @@ window.ITINERARY = {
       { nome: "Sinaia · Peleș",         coords: [45.3500, 25.5500], dia: 3 },
       { nome: "Bran",                   coords: [45.5149, 25.3672], dia: 3 },
       { nome: "Brașov",                 coords: [45.6427, 25.5887], dia: 3 },
-      { nome: "Sighișoara",             coords: [46.2199, 24.7925], dia: 4 },
+      { nome: "Sighișoara",            coords: [46.2199, 24.7925], dia: 4 },
       { nome: "Turda",                  coords: [46.5875, 23.7869], dia: 5 },
       { nome: "Sibiu",                  coords: [45.7975, 24.1516], dia: 5 },
       { nome: "Transfăgărășan",         coords: [45.6040, 24.6170], dia: 6 },
@@ -59,6 +59,7 @@ window.ITINERARY = {
     /* ------------------------------------------------------------------ */
     {
       id: "25set",
+      foto: "bucareste",
       data: "2026-09-25",
       dataLabel: "25 SET",
       origem: "Chegada",
@@ -151,6 +152,7 @@ window.ITINERARY = {
     /* ------------------------------------------------------------------ */
     {
       id: "26set",
+      foto: "bucareste",
       data: "2026-09-26",
       dataLabel: "26 SET",
       origem: "Bucareste",
@@ -248,6 +250,7 @@ window.ITINERARY = {
     /* ------------------------------------------------------------------ */
     {
       id: "27set",
+      foto: "transilvania",
       data: "2026-09-27",
       dataLabel: "27 SET",
       origem: "Bucareste",
@@ -264,6 +267,7 @@ window.ITINERARY = {
       paradas: [
         {
           nome: "Castelul Peleș",
+          foto: "peles",
           nomePt: "Castelo de Peleș",
           local: "Sinaia",
           coords: [45.3600, 25.5425],
@@ -290,6 +294,7 @@ window.ITINERARY = {
         },
         {
           nome: "Castelul Bran",
+          foto: "transilvania",
           nomePt: "Castelo de Bran",
           local: "Bran",
           coords: [45.5149, 25.3672],
@@ -315,6 +320,7 @@ window.ITINERARY = {
         },
         {
           nome: "Piața Sfatului",
+          foto: "brasov",
           nomePt: "Brașov — Praça do Conselho",
           local: "Brașov",
           coords: [45.6427, 25.5887],
@@ -337,6 +343,7 @@ window.ITINERARY = {
         },
         {
           nome: "Biserica Neagră",
+          foto: "brasov",
           nomePt: "Igreja Negra",
           local: "Brașov",
           coords: [45.6410, 25.5876],
@@ -398,6 +405,7 @@ window.ITINERARY = {
     /* ------------------------------------------------------------------ */
     {
       id: "28set",
+      foto: "sighisoara",
       data: "2026-09-28",
       dataLabel: "28 SET",
       origem: "Sighișoara",
@@ -411,6 +419,7 @@ window.ITINERARY = {
       paradas: [
         {
           nome: "Piața Cetății",
+          foto: "sighisoara",
           nomePt: "Praça da Cidadela",
           local: "Sighișoara",
           coords: [46.2196, 24.7920],
@@ -428,6 +437,7 @@ window.ITINERARY = {
         },
         {
           nome: "Turnul cu Ceas",
+          foto: "sighisoara",
           nomePt: "Torre do Relógio",
           local: "Sighișoara",
           coords: [46.2199, 24.7925],
@@ -529,6 +539,7 @@ window.ITINERARY = {
     /* ------------------------------------------------------------------ */
     {
       id: "29set",
+      foto: "sibiu",
       data: "2026-09-29",
       dataLabel: "29 SET",
       origem: "Sighișoara",
@@ -592,6 +603,7 @@ window.ITINERARY = {
         },
         {
           nome: "Piața Mare",
+          foto: "sibiu",
           nomePt: "Sibiu — Praça Grande",
           local: "Sibiu",
           coords: [45.7975, 24.1516],
@@ -632,6 +644,7 @@ window.ITINERARY = {
     /* ------------------------------------------------------------------ */
     {
       id: "30set",
+      foto: "transfagarasan",
       data: "2026-09-30",
       dataLabel: "30 SET",
       origem: "Sibiu",
@@ -656,6 +669,7 @@ window.ITINERARY = {
       paradas: [
         {
           nome: "Cascada Bâlea",
+          foto: "transfagarasan",
           nomePt: "Cascata Bâlea",
           local: "Cârțișoara",
           coords: [45.6295, 24.6205],
@@ -679,6 +693,7 @@ window.ITINERARY = {
         },
         {
           nome: "Lacul Bâlea",
+          foto: "transfagarasan",
           nomePt: "Lago Bâlea",
           local: "Transfăgărășan",
           coords: [45.6040, 24.6170],
@@ -703,6 +718,7 @@ window.ITINERARY = {
         },
         {
           nome: "Barajul Vidraru",
+          foto: "transfagarasan",
           nomePt: "Barragem de Vidraru",
           local: "Arefu",
           coords: [45.3540, 24.6350],
