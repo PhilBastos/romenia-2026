@@ -66,6 +66,7 @@ estrutura repetitiva — copie um bloco parecido e adapte.
 | Prioridade da parada | campo `prioridade`: `"essencial"`, `"recomendada"` ou `"opcional"` |
 | Link do site oficial / ingressos | campos `siteUrl` e `ingressoUrl` |
 | Distância/tempo até a próxima parada | campo `trechoAteProximo` `{ km, min, nota }` |
+| Foto do dia / da parada | campo `foto: "nome-do-arquivo"` (arquivo em `assets/images/<nome>.webp`) |
 | Distância do início do dia até a 1ª parada | campo `chegadaOrigem` da primeira parada |
 | **Hotel de uma noite** | campo `hospedagem` do dia |
 | Nome, endereço, telefone, check-in do hotel | `hospedagem.nome`, `.endereco`, `.telefone`, `.checkin` |
@@ -226,9 +227,11 @@ navegador) e funciona offline para o roteiro já carregado.
 │   ├── maps.js             Monta os links do Google Maps
 │   └── map-romania.js      Desenha o mapa da Romênia em SVG
 ├── data/
-│   └── itinerary.js        >>> TODO O CONTEÚDO DA VIAGEM <<<
+│   ├── itinerary.js        >>> TODO O CONTEÚDO DA VIAGEM <<<
+│   └── routes.js           Traçado das rodovias no mapa (OpenStreetMap)
 ├── assets/
-│   └── icons/              Ícones do app instalado
+│   ├── icons/              Ícones do app instalado
+│   └── images/             Fotos dos destinos (.webp)
 ├── manifest.webmanifest    Configuração do PWA
 ├── service-worker.js       Cache offline e aviso de atualização
 ├── .nojekyll               Para o GitHub Pages servir os arquivos como estão
