@@ -72,7 +72,10 @@ window.MapaInterativo = function (quadro) {
     else { raf = 0; tPrev = 0; }
   }
   function molaOn() {
-    if (REDUZ) { x = xt; y = yt; k = kt; vx = vy = vk = 0; aplicar(); return; }
+    /* sem animação: movimento reduzido, ou aba oculta (ninguém está vendo) */
+    if (REDUZ || document.hidden) {
+      x = xt; y = yt; k = kt; vx = vy = vk = 0; aplicar(); return;
+    }
     if (!raf) { tPrev = 0; raf = requestAnimationFrame(passo); }
   }
   function molaOff() { if (raf) cancelAnimationFrame(raf); raf = 0; tPrev = 0; }
@@ -182,6 +185,10 @@ window.MapaInterativo = function (quadro) {
   window.addEventListener("resize", function () {
     acomodarAlvo();
     molaOn();
+  });
+  /* ao voltar a ver a aba, retoma qualquer mola pendente */
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && (x !== xt || y !== yt || k !== kt)) molaOn();
   });
 
   aplicar();
