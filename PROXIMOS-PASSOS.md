@@ -2,10 +2,15 @@
 
 ## Dados que ainda faltam (só editar `data/itinerary.js`)
 
+- [x] Hotel de Sighișoara (27–29 set): **Casa cu Cerb**, Strada Școlii 1,
+      check-in 14:00 — do itinerário Hotels.com.
+- [x] Hotel de Sibiu (29–30 set): **Casa Luxemburg**, Piața Mică 16,
+      check-in 16:00 — do itinerário Hotels.com.
 - [ ] Hotel de Bucareste (2 noites, 25–27 set): nome, endereço, telefone,
-      check-in, link da reserva, coordenadas.
-- [ ] Hotel de Sighișoara (2 noites, 27–29 set): idem.
-- [ ] Hotel de Sibiu (1 noite, 29–30 set): idem.
+      check-in, link da reserva, coordenadas. (Não estava no itinerário
+      Hotels.com — reservar ou adicionar quando confirmado.)
+- [ ] Telefone dos hotéis de Sighișoara e Sibiu (Hotels.com não mostra o
+      número; pegar no e-mail de confirmação ou no site da propriedade).
 - [ ] Carro: locadora, local e horário de retirada (25 set) e devolução
       (30 set), número da reserva, telefone, link.
 - [ ] Voo de volta: número do voo (campo `voo.numeroVoo`).

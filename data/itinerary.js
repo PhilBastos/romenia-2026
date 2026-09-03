@@ -390,15 +390,15 @@ window.ITINERARY = {
       ],
       hospedagem: {
         cidade: "Sighișoara",
-        nome: "HOTEL_A_DEFINIR",
-        endereco: "ENDERECO_A_DEFINIR",
-        checkin: "CHECKIN_A_DEFINIR",
+        nome: "Casa cu Cerb",
+        endereco: "Strada Școlii 1, Sighișoara",
+        checkin: "14:00",
         telefone: "TELEFONE_A_DEFINIR",
-        reservaUrl: null,
-        coords: null,
+        reservaUrl: "https://www.hoteis.com/trips/egti-KEE-MBH-0B4T",
+        coords: [46.2196, 24.7917],
         noites: 2,
         continuacao: false,
-        observacao: "Duas noites em Sighișoara."
+        observacao: "A histórica “Casa do Cervo”, dentro da cidadela. Duas noites (check-out no dia 29 às 11:00)."
       }
     },
 
@@ -524,15 +524,15 @@ window.ITINERARY = {
       ],
       hospedagem: {
         cidade: "Sighișoara",
-        nome: "HOTEL_A_DEFINIR",
-        endereco: "ENDERECO_A_DEFINIR",
-        checkin: "CHECKIN_A_DEFINIR",
+        nome: "Casa cu Cerb",
+        endereco: "Strada Școlii 1, Sighișoara",
+        checkin: "14:00",
         telefone: "TELEFONE_A_DEFINIR",
-        reservaUrl: null,
-        coords: null,
+        reservaUrl: "https://www.hoteis.com/trips/egti-KEE-MBH-0B4T",
+        coords: [46.2196, 24.7917],
         noites: 2,
         continuacao: true,
-        observacao: null
+        observacao: "2ª noite — check-out amanhã às 11:00."
       }
     },
 
@@ -629,15 +629,15 @@ window.ITINERARY = {
       ],
       hospedagem: {
         cidade: "Sibiu",
-        nome: "HOTEL_A_DEFINIR",
-        endereco: "ENDERECO_A_DEFINIR",
-        checkin: "CHECKIN_A_DEFINIR",
+        nome: "Casa Luxemburg",
+        endereco: "Piața Mică 16, Sibiu",
+        checkin: "16:00",
         telefone: "TELEFONE_A_DEFINIR",
-        reservaUrl: null,
-        coords: null,
+        reservaUrl: "https://www.hoteis.com/trips/egti-KEE-MBH-0B4T",
+        coords: [45.7984, 24.1497],
         noites: 1,
         continuacao: false,
-        observacao: null
+        observacao: "Na Piața Mică, ao lado da Ponte das Mentiras. Check-out no dia 30 às 11:00."
       }
     },
 
