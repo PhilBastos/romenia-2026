@@ -72,6 +72,36 @@ window.ITINERARY = {
       selos: [{ tom: "aviso", texto: "Chegada 01:30" }],
       paradas: [
         {
+          nome: "Do aeroporto ao hotel",
+          nomePt: "Do aeroporto ao hotel",
+          local: "Aeroporto Henri Coandă → Gara de Nord",
+          coords: [44.4472, 26.0740],
+          modo: "driving",
+          chegadaOrigem: { km: 17, min: 30 },
+          descricao:
+            "O voo chega por volta da 01:30. No saguão de desembarque, pegue " +
+            "um táxi pelo totem/balcão oficial, ou chame um Bolt (ou Uber) no " +
+            "ponto de aplicativos, logo à saída — sinalizado. A corrida até o " +
+            "hotel leva cerca de 20–25 min a essa hora e custa em torno de 60 " +
+            "a 90 lei (RON). O ônibus 100 também liga o aeroporto à Gara de " +
+            "Nord 24 h, mas, com malas e cansaço, o táxi compensa.",
+          naoPerder: [],
+          dicas: [
+            "Táxi só pelo totem/balcão oficial do desembarque",
+            "Nunca aceitar oferta de motorista que aborda no saguão",
+            "Bolt e Uber funcionam no aeroporto (ponto de embarque sinalizado)"
+          ],
+          tempoSugerido: "—",
+          prioridade: "essencial",
+          observacao:
+            "Endereço para o motorista: Hotel Sir Gara de Nord — Bulevardul " +
+            "Dinicu Golescu 29, Sector 1. Avise o hotel do horário de chegada; " +
+            "a recepção costuma funcionar 24 h.",
+          siteUrl: null,
+          ingressoUrl: null,
+          trechoAteProximo: { km: 3, min: 12, nota: "de metrô (M1) ou táxi até o centro" }
+        },
+        {
           nome: "Centrul Vechi",
           nomePt: "Centro Histórico (Lipscani)",
           local: "Bucareste",
@@ -137,15 +167,17 @@ window.ITINERARY = {
       ],
       hospedagem: {
         cidade: "Bucareste",
-        nome: "HOTEL_A_DEFINIR",
-        endereco: "ENDERECO_A_DEFINIR",
-        checkin: "CHECKIN_A_DEFINIR",
+        nome: "Hotel Sir Gara de Nord",
+        endereco: "Bulevardul Dinicu Golescu 29, Sector 1, Bucareste",
+        checkin: "recepção 24 h (chegada de madrugada)",
         telefone: "TELEFONE_A_DEFINIR",
         reservaUrl: null,
-        coords: null,
+        coords: [44.4472, 26.0740],
         noites: 2,
         continuacao: false,
-        observacao: null
+        observacao:
+          "Ao lado da estação Gara de Nord (metrô M1 e trens). Chegada por " +
+          "volta da 01:30 no dia 25 — confirme o horário com o hotel."
       }
     },
 
@@ -235,15 +267,15 @@ window.ITINERARY = {
       ],
       hospedagem: {
         cidade: "Bucareste",
-        nome: "HOTEL_A_DEFINIR",
-        endereco: "ENDERECO_A_DEFINIR",
-        checkin: "CHECKIN_A_DEFINIR",
+        nome: "Hotel Sir Gara de Nord",
+        endereco: "Bulevardul Dinicu Golescu 29, Sector 1, Bucareste",
+        checkin: "recepção 24 h",
         telefone: "TELEFONE_A_DEFINIR",
         reservaUrl: null,
-        coords: null,
+        coords: [44.4472, 26.0740],
         noites: 2,
         continuacao: true,
-        observacao: null
+        observacao: "2ª noite — check-out no dia 27 pela manhã (dia de estrada)."
       }
     },
 

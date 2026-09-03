@@ -253,12 +253,13 @@
       '<span style="width:' + pct + '%"></span></div></div>';
   }
 
-  function naoPerderHtml(itens) {
+  function listaHtml(itens, titulo) {
     if (!itens || !itens.length) return "";
-    return '<div class="nao-perder"><p class="nao-perder__titulo">Não perder</p><ul>' +
+    return '<div class="nao-perder"><p class="nao-perder__titulo">' + esc(titulo) + "</p><ul>" +
       itens.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") +
       "</ul></div>";
   }
+  function naoPerderHtml(itens) { return listaHtml(itens, "Não perder"); }
 
   /* Bloco "PRÓXIMO DESTINO" ao pé de uma parada.
      O botão abre a PÁGINA DE DETALHES da próxima parada (não o mapa) —
@@ -663,6 +664,7 @@
         '<div class="acoes acoes--empilhada">' + acoes + "</div>" +
         '<p class="parada__desc parada__desc--completa">' + esc(p.descricao) + "</p>" +
         naoPerderHtml(p.naoPerder) +
+        listaHtml(p.dicas, "Dicas") +
         (p.tempoSugerido && p.tempoSugerido !== "—"
           ? '<p class="parada__tempo">' + ICON.relogio + "<span>Tempo sugerido: " + esc(p.tempoSugerido) + "</span></p>" : "") +
         (p.observacao ? avisoHtml(p.observacao, "info") : "") +

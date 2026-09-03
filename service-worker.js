@@ -14,7 +14,7 @@
  * o aviso "Roteiro atualizado" para o usuário.
  */
 
-const CACHE_VERSION = "romenia-2026-v8";
+const CACHE_VERSION = "romenia-2026-v9";
 
 const APP_SHELL = [
   ".",
