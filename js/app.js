@@ -772,7 +772,15 @@
     var manterScroll = window._manterScroll;
     var y = window.scrollY;
 
-    main.innerHTML = '<div class="tela" tabindex="-1">' + saida.html + "</div>";
+    /* direção da navegação → transição espacial (avança/volta) */
+    var prof = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean).length;
+    var cls = "tela";
+    if (manterScroll) cls += " tela--estatica";
+    else if (window._profAnt != null && prof !== window._profAnt)
+      cls += prof > window._profAnt ? " tela--avanca" : " tela--volta";
+    window._profAnt = prof;
+
+    main.innerHTML = '<div class="' + cls + '" tabindex="-1">' + saida.html + "</div>";
     document.title = /Romênia 2026/.test(saida.titulo)
       ? saida.titulo : saida.titulo + " · Romênia 2026";
 
